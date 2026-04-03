@@ -10,7 +10,7 @@ async function main(): Promise<void> {
 
   if (!client.sessionStore.isAuthenticated()) {
     console.info(
-      "Auth: set CELESC_USERNAME, CELESC_PASSWORD, CELESC_LOGIN_COOKIE (see .env.example), or CELESC_ACCESS_TOKEN.",
+      "Auth: set CELESC_USERNAME, CELESC_PASSWORD, CELESC_LOGIN_COOKIE (see README), or CELESC_ACCESS_TOKEN.",
     );
     return;
   }
