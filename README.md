@@ -1,7 +1,5 @@
 # Conecte — dashboard local para Celesc
 
-<img src="conecte.png" width="800px">
-
 <p align="center">
   <img src="conecte.png" alt="Captura do painel Conecte: instalações, solicitações e atalhos para serviços Celesc" width="920" />
 </p>
