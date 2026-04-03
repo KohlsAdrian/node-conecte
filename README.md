@@ -1,5 +1,7 @@
 # Conecte — dashboard local para Celesc
 
+<img src="conecte.png" width="800px">
+
 <p align="center">
   <img src="conecte.png" alt="Captura do painel Conecte: instalações, solicitações e atalhos para serviços Celesc" width="920" />
 </p>
@@ -13,7 +15,8 @@
   <a href="#o-que-este-repositório-contém">Conteúdo</a> ·
   <a href="#início-rápido">Início rápido</a> ·
   <a href="#documentação">Documentação</a> ·
-  <a href="#avisos-importantes">Avisos</a>
+  <a href="#avisos-importantes">Avisos</a> ·
+  <a href="#como-isso-foi-possivel-mapeamento-das-apis">Como foi possível</a>
 </p>
 
 ---
@@ -103,6 +106,14 @@ npm run build:web
 2. **Credenciais**: nunca commite `.env` nem tokens. O front pode armazenar e-mail/senha no navegador se você marcar “lembrar” — evite em computadores compartilhados.
 3. **Termos de uso**: o uso de automação contra o portal pode conflitar com os termos do site; este projeto existe para estudo, transparência e melhorias de privacidade/segurança por parte dos provedores.
 4. **Marca Celesc / Conecte**: nomes pertencem aos respectivos titulares; este repositório é independente.
+
+<h2 id="como-isso-foi-possivel-mapeamento-das-apis">Como isso foi possível (mapeamento das APIs)</h2>
+
+Este projeto **não** depende de chaves secretas da Celesc nem de acesso privilegiado ao backend. O portal [Conecte](https://conecte.celesc.com.br) é uma **SPA** que, como quase todo site desse tipo, conversa com o servidor por **HTTPS** usando JSON: login em rotas REST e dados em **GraphQL** no mesmo domínio. Qualquer cliente capaz de enviar essas requisições — inclusive um script ou um servidor Node local — pode **repetir o mesmo contrato HTTP** que o navegador usa, desde que tenha **credenciais válidas** (e, quando necessário, cabeçalhos semelhantes aos do browser, como explicado em [docs/celesc-api-security.md](docs/celesc-api-security.md)).
+
+**Como os endpoints e operações GraphQL foram mapeados (“scraping” no sentido de observação):** no site oficial, as chamadas aparecem na aba **Rede (Network)** das ferramentas de desenvolvedor do navegador. Filtrando por `graphql` ou por método `POST`, dá para ver URLs como **`/graphql`** (dados SAP: contratos, protocolos) e **`/cms/graphql`** (conteúdo Strapi: layout, menus, flags). O corpo das requisições segue o padrão GraphQL sobre HTTP: JSON com `query` (string da operação) e `variables`. A partir desses exemplos reais de tráfego — nomes de operações, argumentos e campos retornados — as queries foram **transcritas** para TypeScript (`src/domain/graphql/operations.ts`) e documentadas em [docs/graphql-endpoints.md](docs/graphql-endpoints.md). Não há “engenharia reversa” de binários: é **espelhar o que o front oficial já envia**, com transparência para quem quiser auditar ou comparar com o portal.
+
+Resumo: o que torna o projeto viável é a **combinação** de API orientada ao front, token Bearer após login legítimo, e um schema GraphQL **estável o bastante** para ser reutilizado por um cliente alternativo — sempre no limite do **uso responsável** e dos termos do site (ver avisos acima).
 
 ## Licença
 
